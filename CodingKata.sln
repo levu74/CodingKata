@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31612.314
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodingKata.Exercise.Array", "CodingKata.Exercise.Array\CodingKata.Exercise.Array.csproj", "{9D0529FF-4375-49E7-8E71-0E3D02411123}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodingKata.Exercise.Array.Tests", "CodingKata.Exercise.Array.Tests\CodingKata.Exercise.Array.Tests.csproj", "{155091E8-C29F-4E33-944B-36219D0E6C98}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9D0529FF-4375-49E7-8E71-0E3D02411123}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9D0529FF-4375-49E7-8E71-0E3D02411123}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9D0529FF-4375-49E7-8E71-0E3D02411123}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9D0529FF-4375-49E7-8E71-0E3D02411123}.Release|Any CPU.Build.0 = Release|Any CPU
+		{155091E8-C29F-4E33-944B-36219D0E6C98}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{155091E8-C29F-4E33-944B-36219D0E6C98}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{155091E8-C29F-4E33-944B-36219D0E6C98}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{155091E8-C29F-4E33-944B-36219D0E6C98}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D1234212-B738-4101-BB53-017FBAE6DA11}
+	EndGlobalSection
+EndGlobal
