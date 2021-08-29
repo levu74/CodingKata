@@ -1,0 +1,2 @@
+# CodingKata
+For practices
