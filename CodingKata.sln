@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31612.314
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodingKata.Exercise.Array", "CodingKata.Exercise.Array\CodingKata.Exercise.Array.csproj", "{9D0529FF-4375-49E7-8E71-0E3D02411123}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodingKata.Exercise", "CodingKata.Exercise\CodingKata.Exercise.csproj", "{9D0529FF-4375-49E7-8E71-0E3D02411123}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CodingKata.Exercise.Array.Tests", "CodingKata.Exercise.Array.Tests\CodingKata.Exercise.Array.Tests.csproj", "{155091E8-C29F-4E33-944B-36219D0E6C98}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CodingKata.Exercise.Tests", "CodingKata.Exercise.Tests\CodingKata.Exercise.Tests.csproj", "{155091E8-C29F-4E33-944B-36219D0E6C98}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
