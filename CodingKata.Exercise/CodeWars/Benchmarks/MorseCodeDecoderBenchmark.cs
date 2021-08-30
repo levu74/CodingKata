@@ -9,7 +9,8 @@ namespace CodingKata.Exercise.CodeWars.Benchmarks
 {
     public class MorseCodeDecoderBenchmark
     {
-        private const string MorseCode = ".... . -.--   .--- ..- -.. .";
+        [Params(".... . -.--   .--- ..- -.. .")]
+        public string MorseCode { get; set; }
 
         [Benchmark]
         public void MySolution()

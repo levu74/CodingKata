@@ -4,7 +4,9 @@ namespace CodingKata.Exercise.CodeWars.Benchmarks
 {
     public class BitCountingBenchmark
     {
-        private const int Number = 500;
+
+        [Params(1, 2, 3, 5, 8, 13, 21, 34, 77231418)]
+        public int Number { get; set; }
 
         [Benchmark]
         public void MySolution()
