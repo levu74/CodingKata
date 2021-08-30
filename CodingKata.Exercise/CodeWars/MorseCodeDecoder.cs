@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CodingKata.Exercise.CodeWars.MorseCodeDecoder
 {
@@ -34,6 +35,16 @@ namespace CodingKata.Exercise.CodeWars.MorseCodeDecoder
             }
 
             return sentence.Trim();
+        }
+    }
+
+    public class KataBestVote
+    {
+        public string Decode(string morseCode)
+        {
+            var words = morseCode.Trim().Split(new[] { "   " }, StringSplitOptions.None);
+            var translatedWords = words.Select(word => word.Split(' ')).Select(letters => string.Join("", letters.Select(MorseCode.Get))).ToList();
+            return string.Join(" ", translatedWords);
         }
     }
 

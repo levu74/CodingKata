@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 
 namespace CodingKata.Exercise.CodeWars.BitCounting
 {
@@ -36,6 +37,14 @@ namespace CodingKata.Exercise.CodeWars.BitCounting
             }
 
             return count;
+        }
+    }
+
+    public class KataBestVote
+    {
+        public int CountBits(int n)
+        {
+            return Convert.ToString(n, 2).Count(x => x == '1');
         }
     }
 }

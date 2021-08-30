@@ -1,4 +1,7 @@
-﻿using System;
+﻿using BenchmarkDotNet.Configs;
+using BenchmarkDotNet.Diagnosers;
+using CodingKata.Exercise.CodeWars.Benchmarks;
+using System;
 
 namespace CodingKata.Exercise.Array
 {
@@ -6,7 +9,13 @@ namespace CodingKata.Exercise.Array
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            BenchmarkDotNet.Running.BenchmarkRunner.Run<BitCountingBenchmark>(DefaultConfig.Instance.AddDiagnoser(MemoryDiagnoser()));
+            BenchmarkDotNet.Running.BenchmarkRunner.Run<MorseCodeDecoderBenchmark>(DefaultConfig.Instance.AddDiagnoser(MemoryDiagnoser()));
+        }
+
+        private static MemoryDiagnoser MemoryDiagnoser()
+        {
+            return new MemoryDiagnoser(new MemoryDiagnoserConfig());
         }
     }
 }
