@@ -1,4 +1,6 @@
 ﻿using BenchmarkDotNet.Attributes;
+using CodingKata.Exercise.Benchmark;
+using CodingKata.Exercise.CodeWars.MorseCodeDecoder;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -7,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace CodingKata.Exercise.CodeWars.Benchmarks
 {
-    public class MorseCodeDecoderBenchmark
+    public class MorseCodeDecoderBenchmark : IBestVoteComparisonBenchmark
     {
         [Params(".... . -.--   .--- ..- -.. .")]
         public string MorseCode { get; set; }
@@ -15,14 +17,14 @@ namespace CodingKata.Exercise.CodeWars.Benchmarks
         [Benchmark]
         public void MySolution()
         {
-            new MorseCodeDecoder.Kata().Decode(MorseCode);
+            new Kata().Decode(MorseCode);
         }
 
 
         [Benchmark]
         public void BestVote()
         {
-            new MorseCodeDecoder.KataBestVote().Decode(MorseCode);
+            new KataBestVote().Decode(MorseCode);
         }
     }
 }
