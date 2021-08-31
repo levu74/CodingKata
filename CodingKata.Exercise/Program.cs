@@ -9,8 +9,14 @@ namespace CodingKata.Exercise.Array
     {
         static void Main(string[] args)
         {
-            BenchmarkDotNet.Running.BenchmarkRunner.Run<BitCountingBenchmark>(DefaultConfig.Instance.AddDiagnoser(MemoryDiagnoser()));
-            BenchmarkDotNet.Running.BenchmarkRunner.Run<MorseCodeDecoderBenchmark>(DefaultConfig.Instance.AddDiagnoser(MemoryDiagnoser()));
+            BenchmarkDotNet.Running.BenchmarkRunner.Run<BitCountingBenchmark>(DefaultConfig());
+            BenchmarkDotNet.Running.BenchmarkRunner.Run<MorseCodeDecoderBenchmark>(DefaultConfig());
+            BenchmarkDotNet.Running.BenchmarkRunner.Run<MorseCodeDecoderAdvanceBenchmark>(DefaultConfig());
+        }
+
+        private static ManualConfig DefaultConfig()
+        {
+            return BenchmarkDotNet.Configs.DefaultConfig.Instance.AddDiagnoser(MemoryDiagnoser());
         }
 
         private static MemoryDiagnoser MemoryDiagnoser()
