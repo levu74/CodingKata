@@ -12,6 +12,7 @@ namespace CodingKata.Exercise.Array
             BenchmarkDotNet.Running.BenchmarkRunner.Run<BitCountingBenchmark>(DefaultConfig());
             BenchmarkDotNet.Running.BenchmarkRunner.Run<MorseCodeDecoderBenchmark>(DefaultConfig());
             BenchmarkDotNet.Running.BenchmarkRunner.Run<MorseCodeDecoderAdvanceBenchmark>(DefaultConfig());
+            BenchmarkDotNet.Running.BenchmarkRunner.Run<MorseCodeDecoderRealLifeBenchmark>(DefaultConfig());
         }
 
         private static ManualConfig DefaultConfig()
