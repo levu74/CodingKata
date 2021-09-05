@@ -15,16 +15,16 @@ namespace CodingKata.Exercise.CodeWars.Benchmarks
         [Params(MorseCodeBitLibrary.THE_QUICK_BROWN_FOX_JUMPS_OVER_THE_LAZY_DOG_RL, MorseCodeBitLibrary.HEY_JUDE_1_3)]
         public string Bits { get; set; }
       
-        [Benchmark]
+        [Benchmark(Baseline = true)]
         public void MySolution()
         {
             new Kata().DecodeBitsAdvanced(Bits);
         }
 
-        //[Benchmark]
-        //public void BestVote()
-        //{
-        //    new KataBestVote().DecodeBits(Bits);
-        //}
+        [Benchmark]
+        public void StandardDeviation()
+        {
+            new KataStandardDeviation().DecodeBitsAdvanced(Bits);
+        }
     }
 }

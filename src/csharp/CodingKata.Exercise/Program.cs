@@ -3,7 +3,7 @@ using BenchmarkDotNet.Diagnosers;
 using CodingKata.Exercise.CodeWars.Benchmarks;
 using System;
 
-namespace CodingKata.Exercise.Array
+namespace CodingKata.Exercise
 {
     class Program
     {
