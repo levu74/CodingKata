@@ -53,8 +53,8 @@ Decoding
 
   
 
-[
 
-powered by![](/assets/logos/qualified-black-b052752a4beaf94810c9d982f495680e2a9eb207824764ef98240ccef15cfbb1.svg)![](/assets/logos/qualified-white-7cba1bde874154ee4f39d50aebd5b7e435f5b21af9884b236a60d9015039e7f0.svg)
+# Suggestion Keywords
 
-](https://www.qualified.io?utm_source=codewars&utm_medium=web)
+- Standard Deviation
+- K-means clustering

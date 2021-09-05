@@ -20,7 +20,7 @@ namespace CodingKata.Exercise.CodeWars.MorseCodeDecoderRealLife
         const string Dot = ".";
         const string Dash = "-";
         const char Zero = '0';
-        const char One = '1'; 
+        const char One = '1';
 
         public string DecodeBitsAdvanced(string bits)
         {
@@ -56,7 +56,7 @@ namespace CodingKata.Exercise.CodeWars.MorseCodeDecoderRealLife
             return decodedMorseFromBits.ToString();
         }
 
-        
+
         public string DecodeMorse(string morseCode)
         {
             if (string.IsNullOrEmpty(morseCode))
@@ -165,7 +165,7 @@ namespace CodingKata.Exercise.CodeWars.MorseCodeDecoderRealLife
 
             public override string ToString()
             {
-                return $"{this.State}|{this.Weight}";
+                return $"{{{this.State},{this.Weight}}}";
             }
         }
 
@@ -217,15 +217,15 @@ namespace CodingKata.Exercise.CodeWars.MorseCodeDecoderRealLife
 
             public override string ToString()
             {
-                return list.Select(m => m.ToString()).Aggregate((m,n) => $"{m}-{n}" );
+                return list.Select(m => m.ToString()).Aggregate((m, n) => $"{m}-{n}");
             }
         }
 
-        
+
         class KMeansClustering
         {
             private readonly IEnumerable<MorseBits> samples;
-            private Dictionary<MorseBits, string> labels = new Dictionary<MorseBits, string>(); 
+            private Dictionary<MorseBits, string> labels = new Dictionary<MorseBits, string>();
             private MorseBitsCentroid[] Centroids { get; set; }
 
             public KMeansClustering(IEnumerable<MorseBits> samples)
@@ -236,19 +236,10 @@ namespace CodingKata.Exercise.CodeWars.MorseCodeDecoderRealLife
 
             private void DoWork()
             {
-                var min = samples.Select(x=> x.Weight).Min();
+                IInitCentroidsStratery centroidsInitStrategy = new InitCentroidsByMiniumAggregation();
+                IUpdateCentroidsStrategy centroidsUpdateStrategy = new UpdateCentroidsByBaseOnFirstCentroid();
                 // Set centroids
-                Centroids = new MorseBitsCentroid[]
-                {
-                    new MorseBitsCentroid(new MorseBits(One, min), Dot),
-                    new MorseBitsCentroid(new MorseBits(One, min * 3), Dash),
-                    new MorseBitsCentroid(new MorseBits(Zero, min), ShortPause),
-                    new MorseBitsCentroid(new MorseBits(Zero, min * 3), LetterPause),
-                    new MorseBitsCentroid(new MorseBits(Zero, min * 7), WordPause)
-                };
-
-                Centroids[2].Dependence = Centroids[0];
-                Centroids[3].Dependence = Centroids[1];
+                Centroids = centroidsInitStrategy.Initialize(samples);
 
                 do
                 {
@@ -258,16 +249,15 @@ namespace CodingKata.Exercise.CodeWars.MorseCodeDecoderRealLife
                     }
                     foreach (MorseBits sample in samples)
                     {
-                        var centroids = Centroids.Where(c => c.Current.Bit == sample.Bit).ToList();
-                        MorseBitsCentroid nearest = centroids[0];
+                        MorseBitsCentroid nearest = Centroids[0];
                         double currentDistance = nearest.CalculateDistance(sample);
-                        for (int i = 1; i < centroids.Count; i++)
+                        for (int i = 1; i < Centroids.Length; i++)
                         {
-                            double distance = centroids[i].CalculateDistance(sample);
+                            double distance = Centroids[i].CalculateDistance(sample);
                             if (distance < currentDistance)
                             {
                                 currentDistance = distance;
-                                nearest = centroids[i];
+                                nearest = Centroids[i];
                             }
                         }
 
@@ -275,11 +265,8 @@ namespace CodingKata.Exercise.CodeWars.MorseCodeDecoderRealLife
                     }
 
                     // Re-calculate centroids
-                    foreach (var centroid in Centroids)
-                    {
-                        // We don't change state of centroid
-                        centroid.SetValue(new MorseBits(centroid.Current.State, centroid.GetWeightMean()));
-                    }
+                    centroidsUpdateStrategy.Update(Centroids);
+
                 }
                 while (Centroids.Any(centroid => !centroid.IsSameWithPrevious()));
             }
@@ -290,7 +277,7 @@ namespace CodingKata.Exercise.CodeWars.MorseCodeDecoderRealLife
                 {
                     if (centroid.Contains(morseBits))
                     {
-                        return centroid.Label;
+                        return morseBits.State == One ? centroid.LabelOne : centroid.LabelZero;
                     }
                 }
 
@@ -298,26 +285,80 @@ namespace CodingKata.Exercise.CodeWars.MorseCodeDecoderRealLife
             }
         }
 
-        class MorseBitsCentroid
+        interface IInitCentroidsStratery
         {
-            public MorseBits Current { get; private set; }
-            public string Label { get; }
-            public MorseBits Previous { get; private set; }
-            public List<MorseBits> ClusterItems { get; private set; } = new List<MorseBits>();
-            public MorseBitsCentroid Dependence { get; set; }
-            public MorseBitsCentroid(MorseBits morseBit, string label)
-            {
-                Current = morseBit;
-                Label = label;
-            }
+            MorseBitsCentroid[] Initialize(IEnumerable<MorseBits> samples);
+        }
 
-            public void SetValue(MorseBits newValue)
+        interface IUpdateCentroidsStrategy
+        {
+            void Update(MorseBitsCentroid[] centroids);
+        }
+
+        class InitCentroidsByMiniumAggregation : IInitCentroidsStratery
+        {
+            public MorseBitsCentroid[] Initialize(IEnumerable<MorseBits> samples)
             {
-                if (Dependence != null && newValue.Weight > Dependence.Current.Weight)
+                double min1 = samples.Select(x => x.Weight).Min();
+                double min = samples.Where(x => x.Weight < min1 * 3).Average(x => x.Weight);
+                
+                // For short data
+                if (samples.Count() <= 2)
                 {
-                    newValue = new MorseBits(newValue.State, Dependence.Current.Weight);
+                    min = min1 / 2;
                 }
 
+                // centroids
+                return new MorseBitsCentroid[]
+                {
+                    new MorseBitsCentroid(min, Dot, ShortPause),
+                    new MorseBitsCentroid(min * 3, Dash, LetterPause),
+                    new MorseBitsCentroid(min * 7, Dash, WordPause)
+                };
+            }
+        }
+
+        class UpdateCentroidsByDefault : IUpdateCentroidsStrategy
+        {
+            public void Update(MorseBitsCentroid[] centroids)
+            {
+                foreach (var centroid in centroids)
+                {
+                    // We don't change state of centroid
+                    centroid.SetValue(centroid.GetWeightMean());
+                }
+            }
+        }
+
+        class UpdateCentroidsByBaseOnFirstCentroid : IUpdateCentroidsStrategy
+        {
+            public void Update(MorseBitsCentroid[] centroids)
+            {
+                centroids[0].SetValue(centroids[0].GetWeightMean());
+                centroids[1].SetValue((centroids[1].GetWeightMean() + centroids[0].Current * 3) / 2);
+                centroids[2].SetValue((centroids[2].GetWeightMean() + centroids[0].Current * 7) / 2);
+            }
+        }
+
+        class MorseBitsCentroid
+        {
+            private double MiddleBitPoint { get; }
+
+            public double Current { get; private set; }
+            public string LabelOne { get; }
+            public string LabelZero { get; }
+            public double Previous { get; private set; }
+            public List<MorseBits> ClusterItems { get; private set; } = new List<MorseBits>();
+            public MorseBitsCentroid(double value, string labelOne, string labelZero)
+            {
+                Current = value;
+                LabelOne = labelOne;
+                LabelZero = labelZero;
+                MiddleBitPoint = 0.5;
+            }
+
+            public void SetValue(double newValue)
+            {
                 Previous = Current;
                 Current = newValue;
             }
@@ -327,27 +368,138 @@ namespace CodingKata.Exercise.CodeWars.MorseCodeDecoderRealLife
                 return Current.Equals(Previous);
             }
 
-            public int GetWeightMean()
+            public double GetWeightMean()
             {
                 if (ClusterItems.Count == 0)
                 {
-                    return this.Current.Weight;
+                    return Current;
                 }
 
-                return (int)Math.Round(ClusterItems.Average(x => x.Weight), 0);
+                return ClusterItems.Average(x => x.Weight);
             }
 
             public double CalculateDistance(MorseBits sample)
             {
-                return Math.Sqrt(Math.Pow(Current.Bit - sample.Bit, 2)  + Math.Pow(Current.Weight - sample.Weight, 2)); 
+                return Math.Sqrt(Math.Pow(MiddleBitPoint - sample.Bit, 2) + Math.Pow(Current - sample.Weight, 2));
             }
 
             public bool Contains(MorseBits sample)
             {
                 return ClusterItems.Contains(sample);
             }
+
+            public override string ToString()
+            {
+                return $"{{{MiddleBitPoint},{Current}}} - [{string.Join(", ", ClusterItems.Select(x => x.ToString()))}]";
+            }
         }
 
+    }
+
+    /// <summary>
+    /// Author: https://www.codewars.com/users/jacobmott
+    /// </summary>
+    public class KataStandardDeviation : IMorseCodeDecoderRealLife
+    {
+        public string DecodeBitsAdvanced(string bits)
+        {
+            // Back out if string has no content. 
+            if (bits.Contains('1') == false) return "";
+
+            // Removes 0s from front and back. 
+            bits = bits.Trim('0');
+
+            // Create char array of string characters.  
+            char[] Characters = new char[bits.Length];
+            for (int i = 0; i < bits.Length; i++) { Characters[i] = bits[i]; }
+
+            // Create int array containg sequential counts of 0s and 1s.
+            // Create string array containing partitioned 0s and 1s. 
+            int[] CountArray = new int[bits.Length];
+            string[] BitArray = new string[bits.Length];
+            string bitString = "";
+            int ArrayCounter = 0;
+            char Check = '1';
+            int counter = 0;
+            foreach (char c in Characters)
+            {
+                if (c != Check)
+                {
+                    BitArray[ArrayCounter] = bitString;
+                    CountArray[ArrayCounter] = counter;
+                    ArrayCounter++;
+                    if (Check == '1') Check = '0';
+                    else Check = '1';
+                    counter = 1;
+                    bitString = "";
+                }
+                else
+                {
+                    counter++;
+                }
+                bitString = bitString + c;
+            }
+            CountArray[ArrayCounter] = counter;
+            BitArray[ArrayCounter] = bitString;
+            ArrayCounter++;
+            Array.Resize(ref CountArray, ArrayCounter);
+            Array.Resize(ref BitArray, ArrayCounter);
+
+            // Calculate sum, average, and standard deviation of transmission data. 
+            int sum = CountArray.Sum();
+            double average = CountArray.Average();
+            double sumOfSquaresOfDifferences = CountArray.Select(val => (val - average) * (val - average)).Sum();
+            double StandardDeviation = Math.Sqrt(sumOfSquaresOfDifferences / CountArray.Length);
+
+            // If large text, round average to prevent too much deviation. 
+            if (BitArray.Length > 500)
+            {
+                average = Math.Ceiling(average);
+            }
+
+            // Parse bits for morse symbols.
+            StringBuilder TranslationOne = new StringBuilder();
+            foreach (string str in BitArray)
+            {
+                if (str.Length <= average && str.Contains('1'))
+                    TranslationOne.Append(".");
+                else if (str.Length > average && str.Contains('1'))
+                    TranslationOne.Append("-");
+                else if ((str.Length <= average && str.Contains('0')))
+                    TranslationOne.Append("");
+                else if (str.Length >= (average + (StandardDeviation * 2)) && str.Contains('0'))
+                    TranslationOne.Append("   ");
+                else if (str.Contains('0') && BitArray.Length <= 3 && str.Length > 5)
+                    TranslationOne.Append("   ");
+                else if (str.Length > average && str.Contains('0'))
+                    TranslationOne.Append(" ");
+            }
+
+            // Return morse code string. 
+            return TranslationOne.ToString();
+        }
+
+        public string DecodeMorse(string morseCode)
+        {
+            // Return blank string if morse code is empty. 
+            if (morseCode == "") return "";
+
+            // Use preloaded dictionary to parse morse code for translation. 
+            StringBuilder sentence = new StringBuilder();
+            string[] words = morseCode.Split("   ");
+            foreach (string word in words)
+            {
+                string[] letters = word.Split(" ");
+                foreach (string letter in letters)
+                {
+                    sentence.Append(Preloaded.MORSE_CODE[letter]);
+                }
+                sentence.Append(" ");
+            }
+
+            // Return completed sentences. 
+            return sentence.ToString().Trim(' ');
+        }
     }
 
     public static class Preloaded
