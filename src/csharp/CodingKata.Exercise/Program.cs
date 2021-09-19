@@ -9,12 +9,13 @@ namespace CodingKata.Exercise
     {
         static void Main(string[] args)
         {
-            //BenchmarkDotNet.Running.BenchmarkRunner.Run<BitCountingBenchmark>(DefaultConfig());
-            //BenchmarkDotNet.Running.BenchmarkRunner.Run<MorseCodeDecoderBenchmark>(DefaultConfig());
-            //BenchmarkDotNet.Running.BenchmarkRunner.Run<MorseCodeDecoderAdvanceBenchmark>(DefaultConfig());
-            //BenchmarkDotNet.Running.BenchmarkRunner.Run<MorseCodeDecoderRealLifeBenchmark>(DefaultConfig());
-            //BenchmarkDotNet.Running.BenchmarkRunner.Run<StripCommentsBenchmark>(DefaultConfig());
+            BenchmarkDotNet.Running.BenchmarkRunner.Run<BitCountingBenchmark>(DefaultConfig());
+            BenchmarkDotNet.Running.BenchmarkRunner.Run<MorseCodeDecoderBenchmark>(DefaultConfig());
+            BenchmarkDotNet.Running.BenchmarkRunner.Run<MorseCodeDecoderAdvanceBenchmark>(DefaultConfig());
+            BenchmarkDotNet.Running.BenchmarkRunner.Run<MorseCodeDecoderRealLifeBenchmark>(DefaultConfig());
+            BenchmarkDotNet.Running.BenchmarkRunner.Run<StripCommentsBenchmark>(DefaultConfig());
             BenchmarkDotNet.Running.BenchmarkRunner.Run<RangeExtractionBenchmark>(DefaultConfig());
+            BenchmarkDotNet.Running.BenchmarkRunner.Run<SudokuSolutionValidatorBenchmark>(DefaultConfig());
         }
 
         private static ManualConfig DefaultConfig()
