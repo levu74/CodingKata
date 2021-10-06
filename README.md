@@ -13,3 +13,6 @@ https://app.codility.com/programmers/
 
 ## Leetcode
 https://leetcode.com/
+
+## CodeSignal
+https://app.codesignal.com/
